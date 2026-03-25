@@ -26,3 +26,25 @@ O desenvolvimento de aplicativos Android no contexto da saúde apresenta uma opo
 -  Veja a documentação oficial: [Android Studio](https://developer.android.com/studio?hl=pt-br).
 
 Após testes em ambientes hospitalares, a combinação Android Studio + Kotlin apresentou os melhores resultados e tornou‑se a solução preferencial quando se busca UI nativa, desempenho máximo, integração profunda com o sistema e suporte corporativo de longo prazo. Essa abordagem proporciona acesso direto às APIs do Android, ferramentas oficiais de profiling, recursos de teste e pipelines de CI/CD, além de Jetpack Compose para interfaces reativas e Kotlin para um código mais conciso e seguro, facilitando a manutenção, as atualizações e a conformidade com requisitos de segurança e privacidade em contextos clínicos.
+
+
+Organização do código:
+
+```                                                                                                         
+  app/
+  ├── __init__.py          — create_app() factory       
+  ├── config.py            — all settings (JWT, CORS, folders, thresholds) 
+  ├── dependencies.py      — limiter, pwd_context,usuarios
+  ├── exceptions.py        — rate_limit_handler, authjwt_exception_handler
+  ├── models.py            — LoginModel 
+  ├── services/
+  │   ├── audio_service.py — Whisper + preprocessing + quality metrics
+  │   ├── pdf_service.py   — PyMuPDF operations
+  │   ├── face_service.py  — DeepFace verification + validation
+  │   └── field_mapping.py — 50-condition CSV→PDF mapping (extracted pure functions)
+  └── routers/
+  ├── auth.py          — GET /, POST /login
+  ├── audio.py         — POST /transcricao
+  ├── face.py          — POST /autenticacao, /upload-imagem
+  └── pdf.py           — POST /listar-campos, /preencher-campos, /imagem, /preencher-pdf
+```

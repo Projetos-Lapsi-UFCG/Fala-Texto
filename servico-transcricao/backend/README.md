@@ -90,9 +90,9 @@ sudo ufw allow 'Nginx Full'
 sudo ufw reload
 sudo ufw status 
 ```
-Agora, mova o arquivo 'Processo', que contém toda a configuração necessária para o Nginx expor o serviço para o domínio público, para esse diretório: 
+Agora, mova o arquivo 'processarpdffalatex.zapto.org.conf', que contém toda a configuração necessária para o Nginx expor o serviço para o domínio público, para esse diretório: 
 ```bash
-sudo mv endereço-de-origem/Processo /etc/nginx/sites-available/Processo
+sudo mv endereço-de-origem/processarpdffalatex.zapto.org.conf /etc/nginx/sites-available/processarpdffalatex.zapto.org.conf
 sudo ln -s /etc/nginx/sites-available/default /etc/nginx/sites-enabled/
 ```
 
