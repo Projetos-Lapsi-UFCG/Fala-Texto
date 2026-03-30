@@ -16,11 +16,10 @@ from typing import Any, Dict, List
 import pandas as pd
 from fastapi import APIRouter, BackgroundTasks, Depends, File, HTTPException, Request, UploadFile
 from fastapi.responses import FileResponse
-from fastapi_jwt_auth import AuthJWT
 from werkzeug.utils import secure_filename
 
 from app.config import IMAGE_FOLDER, UPLOAD_FOLDER
-from app.dependencies import limiter
+from app.dependencies import JWTAuth, limiter
 from app.services import pdf_service
 from app.services.field_mapping import coerce_field_types, map_csv_to_pdf_fields
 
@@ -32,7 +31,7 @@ router = APIRouter()
 async def listar_campos(
     request: Request,
     file: UploadFile = File(...),
-    Authorize: AuthJWT = Depends(),
+    Authorize: JWTAuth = Depends(),
 ) -> dict:
     """Return all form-field names and types found in the uploaded PDF.
 
@@ -65,7 +64,7 @@ async def preencher_campos(
     request: Request,
     background_tasks: BackgroundTasks,
     file: UploadFile = File(...),
-    Authorize: AuthJWT = Depends(),
+    Authorize: JWTAuth = Depends(),
 ) -> FileResponse:
     """Fill PDF form fields with values from the multipart form body.
 
@@ -123,7 +122,7 @@ async def imagem(
     request: Request,
     background_tasks: BackgroundTasks,
     file: UploadFile = File(...),
-    Authorize: AuthJWT = Depends(),
+    Authorize: JWTAuth = Depends(),
 ) -> FileResponse:
     """Render the first page of an uploaded PDF as a PNG image.
 
@@ -165,7 +164,7 @@ async def preencher_pdf(
     request: Request,
     background_tasks: BackgroundTasks,
     files: List[UploadFile] = File(...),
-    Authorize: AuthJWT = Depends(),
+    Authorize: JWTAuth = Depends(),
 ) -> FileResponse:
     """Fill a PDF form using key/value pairs from an uploaded CSV file.
 

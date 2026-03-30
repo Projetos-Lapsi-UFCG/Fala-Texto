@@ -10,9 +10,7 @@ POST /login  — Validates credentials and returns a JWT access token.
 from fastapi import APIRouter, Depends, HTTPException, Request
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
-from fastapi_jwt_auth import AuthJWT
-
-from app.dependencies import limiter, pwd_context, usuarios
+from app.dependencies import JWTAuth, limiter, pwd_context, usuarios
 from app.models import LoginModel
 
 router = APIRouter()
@@ -22,7 +20,7 @@ templates = Jinja2Templates(directory="templates")
 @router.get("/", response_class=HTMLResponse)
 def home(request: Request) -> HTMLResponse:
     """Serve the main UI page."""
-    return templates.TemplateResponse("index.html", {"request": request})
+    return templates.TemplateResponse(request=request, name="index.html")
 
 
 @router.post("/login")
@@ -30,7 +28,7 @@ def home(request: Request) -> HTMLResponse:
 def login(
     request: Request,
     data: LoginModel,
-    Authorize: AuthJWT = Depends(),
+    Authorize: JWTAuth = Depends(),
 ) -> dict:
     """Authenticate a user and return a JWT access token.
 

@@ -7,9 +7,10 @@ librosa
 soundfile
 noisereduce
 pydub
-fastapi-jwt-auth 
+python-jose[cryptography]
 slowapi 
-passlib 
+passlib
+bcrypt<4.0
 deepface
 facenet-pytorch
 tf-keras

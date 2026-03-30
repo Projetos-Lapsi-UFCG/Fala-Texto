@@ -11,9 +11,48 @@ Replace with a proper user store before any production rollout that requires
 more than the current two fixed accounts.
 """
 
+from datetime import datetime, timedelta, timezone
+
+from fastapi import HTTPException, Security
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from jose import JWTError, jwt
 from passlib.context import CryptContext
 from slowapi import Limiter
 from slowapi.util import get_remote_address
+
+from app.config import JWT_ACCESS_TOKEN_EXPIRES, JWT_SECRET_KEY
+
+_bearer = HTTPBearer(auto_error=False)
+
+
+class JWTAuth:
+    """Minimal JWT helper that mimics the fastapi-jwt-auth interface."""
+
+    def __init__(
+        self,
+        credentials: HTTPAuthorizationCredentials | None = Security(_bearer),
+    ) -> None:
+        self._credentials = credentials
+
+    def jwt_required(self) -> None:
+        if not self._credentials:
+            raise HTTPException(status_code=401, detail="Token de autorização ausente")
+        try:
+            jwt.decode(
+                self._credentials.credentials,
+                JWT_SECRET_KEY,
+                algorithms=["HS256"],
+            )
+        except JWTError:
+            raise HTTPException(status_code=401, detail="Token inválido ou expirado")
+
+    def create_access_token(self, subject: str) -> str:
+        expire = datetime.now(timezone.utc) + timedelta(seconds=JWT_ACCESS_TOKEN_EXPIRES)
+        return jwt.encode(
+            {"sub": subject, "exp": expire},
+            JWT_SECRET_KEY,
+            algorithm="HS256",
+        )
 
 # ---------------------------------------------------------------------------
 # Rate limiter

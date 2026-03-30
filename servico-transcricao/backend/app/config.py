@@ -10,9 +10,6 @@ behaviour; override them via environment variables in production.
 import os
 import secrets
 
-from pydantic import BaseModel
-from fastapi_jwt_auth import AuthJWT
-
 # ---------------------------------------------------------------------------
 # CORS
 # ---------------------------------------------------------------------------
@@ -25,18 +22,10 @@ ORIGINS: list[str] = [
 # JWT
 # ---------------------------------------------------------------------------
 
-class JWTSettings(BaseModel):
-    """JWT configuration consumed by fastapi-jwt-auth."""
-
-    authjwt_secret_key: str = os.getenv("JWT_SECRET_KEY", secrets.token_hex(32))
-    authjwt_access_token_expires: int = int(
-        os.getenv("JWT_ACCESS_TOKEN_EXPIRES", str(6 * 60 * 60))  # 6 hours
-    )
-
-
-@AuthJWT.load_config
-def get_jwt_settings() -> JWTSettings:
-    return JWTSettings()
+JWT_SECRET_KEY: str = os.getenv("JWT_SECRET_KEY", secrets.token_hex(32))
+JWT_ACCESS_TOKEN_EXPIRES: int = int(
+    os.getenv("JWT_ACCESS_TOKEN_EXPIRES", str(6 * 60 * 60))  # 6 hours
+)
 
 
 # ---------------------------------------------------------------------------

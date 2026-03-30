@@ -13,13 +13,12 @@ import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from fastapi_jwt_auth.exceptions import AuthJWTException
 from slowapi.errors import RateLimitExceeded
 from slowapi.middleware import SlowAPIMiddleware
 
 from app.config import IMAGE_FOLDER, ORIGINS, UPLOAD_FOLDER
 from app.dependencies import limiter
-from app.exceptions import authjwt_exception_handler, rate_limit_handler
+from app.exceptions import rate_limit_handler
 from app.routers import auth, audio, face, pdf
 
 
@@ -56,7 +55,6 @@ def create_app() -> FastAPI:
     app.add_middleware(SlowAPIMiddleware)
 
     app.add_exception_handler(RateLimitExceeded, rate_limit_handler)
-    app.add_exception_handler(AuthJWTException, authjwt_exception_handler)
 
     app.include_router(auth.router)
     app.include_router(audio.router)

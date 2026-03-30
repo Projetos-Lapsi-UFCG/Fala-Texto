@@ -12,11 +12,10 @@ import uuid
 
 from fastapi import APIRouter, Depends, File, HTTPException, Request, UploadFile
 from fastapi.responses import JSONResponse
-from fastapi_jwt_auth import AuthJWT
 from werkzeug.utils import secure_filename
 
 from app.config import IMAGE_FOLDER
-from app.dependencies import limiter
+from app.dependencies import JWTAuth, limiter
 from app.services import face_service
 
 router = APIRouter()
@@ -27,7 +26,7 @@ router = APIRouter()
 async def autenticacao(
     request: Request,
     file: UploadFile = File(...),
-    Authorize: AuthJWT = Depends(),
+    Authorize: JWTAuth = Depends(),
 ) -> dict:
     """Verify that the uploaded face image matches a registered identity.
 
@@ -60,7 +59,7 @@ async def autenticacao(
 async def upload_imagem(
     request: Request,
     file: UploadFile = File(...),
-    Authorize: AuthJWT = Depends(),
+    Authorize: JWTAuth = Depends(),
 ) -> JSONResponse:
     """Register a face image for future authentication.
 

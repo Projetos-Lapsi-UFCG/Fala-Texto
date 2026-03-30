@@ -11,7 +11,6 @@ import os
 import uuid
 
 from fastapi import APIRouter, Depends, File, HTTPException, Request, UploadFile
-from fastapi_jwt_auth import AuthJWT
 from werkzeug.utils import secure_filename
 
 from app.config import (
@@ -20,7 +19,7 @@ from app.config import (
     SNR_THRESHOLD,
     UPLOAD_FOLDER,
 )
-from app.dependencies import limiter
+from app.dependencies import JWTAuth, limiter
 from app.services import audio_service
 
 router = APIRouter()
@@ -31,7 +30,7 @@ router = APIRouter()
 async def transcricao(
     request: Request,
     file: UploadFile = File(...),
-    Authorize: AuthJWT = Depends(),
+    Authorize: JWTAuth = Depends(),
 ) -> dict:
     """Transcribe speech from an uploaded audio file.
 
