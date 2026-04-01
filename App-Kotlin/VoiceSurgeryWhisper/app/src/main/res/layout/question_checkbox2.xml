@@ -44,8 +44,7 @@
     <EditText
         android:id="@+id/input_answer1"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:onClick="handleClick1"/>
+        android:layout_height="wrap_content" />
         <!--android:focusable="false" -->
 
 
@@ -60,8 +59,7 @@
     <EditText
         android:id="@+id/input_answer2"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:onClick="handleClick2"/>
+        android:layout_height="wrap_content" />
         <!--android:focusable="false" -->
 
 
@@ -76,8 +74,7 @@
     <EditText
         android:id="@+id/input_answer3"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:onClick="handleClick3"/>
+        android:layout_height="wrap_content" />
         <!--android:focusable="false" -->
 
 </LinearLayout>

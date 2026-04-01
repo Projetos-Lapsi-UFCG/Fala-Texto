@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Voice Surgery Whisper"
+rootProject.name = "Cirurgia Segura - Fala"
 include(":app")
  

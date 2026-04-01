@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.voicesurgerywhisper"
+    namespace = "com.example.cirurgiasegura_fala"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.example.voicesurgerywhisper"
+        applicationId = "com.example.cirurgiasegura_fala"
         minSdk = 28
         targetSdk = 36
         versionCode = 1

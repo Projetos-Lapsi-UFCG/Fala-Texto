@@ -24,8 +24,7 @@
         android:id="@+id/input_answer1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="40dp"
-        android:onClick="handleClick1"/>
+        android:layout_marginBottom="40dp" />
         <!--android:focusable="false" -->
 
 
@@ -40,8 +39,7 @@
         android:id="@+id/input_answer2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="40dp"
-        android:onClick="handleClick2"/>
+        android:layout_marginBottom="40dp" />
         <!--android:focusable="false" -->
 
     <TextView
@@ -55,8 +53,7 @@
         android:id="@+id/input_answer3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="40dp"
-        android:onClick="handleClick3"/>
+        android:layout_marginBottom="40dp" />
         <!--android:focusable="false" -->
 
     <TextView
@@ -70,7 +67,6 @@
         android:id="@+id/input_answer4"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="40dp"
-        android:onClick="handleClick4"/>
+        android:layout_marginBottom="40dp" />
         <!--android:focusable="false" -->
 </LinearLayout>

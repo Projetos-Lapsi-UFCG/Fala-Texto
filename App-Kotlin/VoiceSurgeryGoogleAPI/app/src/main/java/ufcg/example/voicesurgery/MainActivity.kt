@@ -3,11 +3,13 @@ package ufcg.example.voicesurgery
 import android.app.AlertDialog
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.FrameLayout
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -101,6 +103,10 @@ class MainActivity : AppCompatActivity() {
     */
     private lateinit var pdfManager: PdfFlowManager
 
+    // Widgets barra de progresso
+    private lateinit var loadingPB: ProgressBar
+    private lateinit var textPB: TextView
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -137,6 +143,10 @@ class MainActivity : AppCompatActivity() {
         btnFalar.setOnClickListener { voiceRecognizer.startListening() }
         btnHowto.setOnClickListener { mostraInstrucoes() }
 
+
+        loadingPB = findViewById(R.id.progressBar)
+        textPB = findViewById(R.id.progressText)
+
         fazerLogin {
             // Este código aqui (onSuccess) só roda
             // depois que o login for bem-sucedido
@@ -147,9 +157,14 @@ class MainActivity : AppCompatActivity() {
 
         setupVoiceListener()
 
+        loadingPB.max = stateManager.getTotalQuestions()
+
         // Inicia
         PermissionManager.checkAndRequestAudioPermission(this)
         showCurrentQuestion()
+
+        loadingPB.max = stateManager.getTotalQuestions()
+
         mostraInstrucoes()
     }
 
@@ -214,6 +229,8 @@ class MainActivity : AppCompatActivity() {
         } else {
             stateManager.moveToNextQuestion()
             showCurrentQuestion()
+            //loadingPB.incrementProgressBy(1)
+            //Toast.makeText(this, "simbora beber", Toast.LENGTH_SHORT).show()
         }
     }
     private fun onPreviousClicked() {
@@ -221,6 +238,7 @@ class MainActivity : AppCompatActivity() {
         saveCurrentAnswer()
         stateManager.moveToPreviousQuestion()
         showCurrentQuestion()
+        //loadingPB.incrementProgressBy(-1)
 
         /*if (stateManager.isQuizFinished()) {
             showQuizFinishedDialog()
@@ -233,6 +251,8 @@ class MainActivity : AppCompatActivity() {
 
     // Atualize a função que exibe a questão
     private fun showCurrentQuestion() {
+        loadingPB.progress = stateManager.getCurrentIndex()
+        textPB.text = "${loadingPB.progress}/${loadingPB.max}"
         val question = stateManager.getCurrentQuestion()
 
         // Pegamos a resposta da questão principal e a função para buscar das subperguntas

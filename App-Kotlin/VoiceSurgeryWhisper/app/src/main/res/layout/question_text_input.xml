@@ -24,7 +24,6 @@
     <EditText
         android:id="@+id/input_answer"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:onClick="handleClick1"/>
+        android:layout_height="wrap_content" />
         <!--android:focusable="false" -->
 </LinearLayout>
