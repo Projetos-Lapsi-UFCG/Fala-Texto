@@ -48,10 +48,26 @@ O fluxo de processamento é modular e linear:
 4. **Tratamento de texto** — normalização, pontuação, correção ortográfica, mapeamento de termos clínicos e validação semântica
 5. **Preenchimento** — texto validado é inserido automaticamente nos campos do formulário PDF, com feedback ao usuário e controles de segurança
 
-<<<<<<< Updated upstream
-Após testes em ambientes hospitalares, a combinação Android Studio + Kotlin apresentou os melhores resultados e tornou‑se a solução preferencial quando se busca UI nativa, desempenho máximo, integração profunda com o sistema e suporte corporativo de longo prazo. Essa abordagem proporciona acesso direto às APIs do Android, ferramentas oficiais de profiling, recursos de teste e pipelines de CI/CD, além de Jetpack Compose para interfaces reativas e Kotlin para um código mais conciso e seguro, facilitando a manutenção, as atualizações e a conformidade com requisitos de segurança e privacidade em contextos clínicos.
-=======
----
+
+Arquitetura alto nível da solução:
+
+```mermaid
+graph TD
+    A[Profissional de Saúde] -->|Voz/Áudio| B(Módulo de Captação)
+    B --> C{Motor de Processamento}
+    
+    subgraph "Núcleo de Inteligência (LAPSI)"
+    C -->|Conversão| D[Transcrição de Texto]
+    D --> E[Validação de Termos Médicos]
+    end
+    
+    E --> F[Interface de Revisão]
+    F -->|Dados Validados| G[(Prontuário Eletrônico)]
+    F -->|Sincronização| H[RNDS - Rede Nacional de Dados em Saúde]
+    
+    style C fill:#949,stroke:#333,stroke-width:2px
+    style H fill:#281,stroke:#333,stroke-width:2px
+```
 
 ## Estrutura do Repositório
 
@@ -59,7 +75,7 @@ Após testes em ambientes hospitalares, a combinação Android Studio + Kotlin a
 |-------|-----------|
 | `App-Kotlin/VoiceSurgeryWhisper/` | App Android principal (Kotlin + Retrofit2 + Jetpack) |
 | `App-Kotlin/VoiceSurgeryGoogleAPI/` | Versão alternativa usando o SpeechRecognizer nativo do Android |
-| `servico-transcricao/backend/` | Backend principal (FastAPI + Whisper turbo + GPU) |
+| `a-transcricao/backend/` | Backend principal (FastAPI + Whisper turbo + GPU) |
 | `servico-transcricao/API/` | Backend legado em Flask (mantido como referência) |
 | `Fine-Tuning/` | Scripts para fine-tuning do Whisper com dados clínicos em português |
 | `App-kivy/` | Protótipo legado em Python/Kivy |
