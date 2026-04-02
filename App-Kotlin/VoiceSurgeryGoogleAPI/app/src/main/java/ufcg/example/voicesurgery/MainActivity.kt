@@ -3,13 +3,11 @@ package ufcg.example.voicesurgery
 import android.app.AlertDialog
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.FrameLayout
-import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -36,6 +34,8 @@ class MainActivity : AppCompatActivity() {
 
 
     // Gerenciadores e Serviços
+    private lateinit var progressBar: android.widget.ProgressBar
+    private lateinit var progressText: TextView
     private val stateManager = QuizStateManager()
     private lateinit var viewFactory: QuestionViewFactory
     private val answerExtractor = AnswerExtractor()
@@ -103,10 +103,6 @@ class MainActivity : AppCompatActivity() {
     */
     private lateinit var pdfManager: PdfFlowManager
 
-    // Widgets barra de progresso
-    private lateinit var loadingPB: ProgressBar
-    private lateinit var textPB: TextView
-
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -136,16 +132,14 @@ class MainActivity : AppCompatActivity() {
         btnPrevious = findViewById(R.id.btn_previous)
         btnFalar = findViewById(R.id.btnFalar)
         btnHowto = findViewById(R.id.btnHowto)
+        progressBar = findViewById(R.id.progressBar)
+        progressText = findViewById(R.id.progressText)
 
         // Configura Listeners
         btnNext.setOnClickListener { onNextClicked() }
         btnPrevious.setOnClickListener { onPreviousClicked() }
         btnFalar.setOnClickListener { voiceRecognizer.startListening() }
         btnHowto.setOnClickListener { mostraInstrucoes() }
-
-
-        loadingPB = findViewById(R.id.progressBar)
-        textPB = findViewById(R.id.progressText)
 
         fazerLogin {
             // Este código aqui (onSuccess) só roda
@@ -157,15 +151,10 @@ class MainActivity : AppCompatActivity() {
 
         setupVoiceListener()
 
-        loadingPB.max = stateManager.getTotalQuestions()
-
         // Inicia
         PermissionManager.checkAndRequestAudioPermission(this)
         showCurrentQuestion()
-
-        loadingPB.max = stateManager.getTotalQuestions()
-
-        mostraInstrucoes()
+        //mostraInstrucoes()
     }
 
     private fun fazerLogin(onSuccess: () -> Unit) {
@@ -229,8 +218,6 @@ class MainActivity : AppCompatActivity() {
         } else {
             stateManager.moveToNextQuestion()
             showCurrentQuestion()
-            //loadingPB.incrementProgressBy(1)
-            //Toast.makeText(this, "simbora beber", Toast.LENGTH_SHORT).show()
         }
     }
     private fun onPreviousClicked() {
@@ -238,7 +225,6 @@ class MainActivity : AppCompatActivity() {
         saveCurrentAnswer()
         stateManager.moveToPreviousQuestion()
         showCurrentQuestion()
-        //loadingPB.incrementProgressBy(-1)
 
         /*if (stateManager.isQuizFinished()) {
             showQuizFinishedDialog()
@@ -251,8 +237,6 @@ class MainActivity : AppCompatActivity() {
 
     // Atualize a função que exibe a questão
     private fun showCurrentQuestion() {
-        loadingPB.progress = stateManager.getCurrentIndex()
-        textPB.text = "${loadingPB.progress}/${loadingPB.max}"
         val question = stateManager.getCurrentQuestion()
 
         // Pegamos a resposta da questão principal e a função para buscar das subperguntas
@@ -268,6 +252,11 @@ class MainActivity : AppCompatActivity() {
         container.removeAllViews()
         container.addView(currentQuestionView)
         configurarCliquesNosInputs(currentQuestionView)
+        val current = stateManager.getCurrentIndex() + 1
+        val total = stateManager.getTotalQuestions()
+        progressBar.max = total
+        progressBar.progress = current
+        progressText.text = "$current/$total"
     }
 
     private fun saveCurrentAnswer() {

@@ -27,16 +27,21 @@
         android:theme="@style/Theme.VoiceSurgery"
         tools:targetApi="31">
         <activity
-            android:name="ufcg.example.voicesurgery.MainActivity"
-            android:windowSoftInputMode="adjustResize"
-            android:configChanges="orientation|screenSize|keyboardHidden|smallestScreenSize"
+            android:name=".SplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".WelcomeActivity"/>
+
+        <activity
+            android:name="ufcg.example.voicesurgery.MainActivity"
+            android:windowSoftInputMode="adjustResize"
+            android:configChanges="orientation|screenSize|keyboardHidden|smallestScreenSize"
+            android:exported="false"/>
     </application>
 
 </manifest>
