@@ -25,16 +25,18 @@ Sistema de conversão de fala em texto para documentação clínica. Profissiona
 
 ## Sumário
 
-- [Visão Geral](#visão-geral)
-- [Arquitetura](#arquitetura)
-- [Estrutura do Repositório](#estrutura-do-repositório)
-- [Componentes](#componentes)
-  - [App Android — Kotlin (principal)](#app-android--kotlin-principal)
-  - [Backend FastAPI](#backend-fastapi)
-  - [Fine-Tuning do Whisper](#fine-tuning-do-whisper)
-  - [App Kivy (legado)](#app-kivy-legado)
-- [Instalação do APK (usuário final)](#instalação-do-apk-usuário-final)
-- [Licença](#licença)
+- [Fala-Texto](#fala-texto)
+  - [Sumário](#sumário)
+  - [Visão Geral](#visão-geral)
+  - [Arquitetura](#arquitetura)
+  - [Estrutura do Repositório](#estrutura-do-repositório)
+  - [Componentes](#componentes)
+    - [App Android — Kotlin (principal)](#app-android--kotlin-principal)
+    - [Backend FastAPI](#backend-fastapi)
+    - [Fine-Tuning do Whisper](#fine-tuning-do-whisper)
+    - [App Kivy (legado)](#app-kivy-legado)
+  - [Instalação do APK (usuário final)](#instalação-do-apk-usuário-final)
+  - [Licença](#licença)
 
 ---
 
@@ -223,3 +225,55 @@ Para instalar o app sem passar pela Play Store:
 
 Distribuído sob a licença [Apache 2.0](LICENSE).
 >>>>>>> Stashed changes
+
+
+```mermaid
+graph TD
+    %% Define styles for clarity
+    classDef ui fill:#e1f5fe,stroke:#01579b,stroke-width:2px;
+    classDef domain fill:#fff9c4,stroke:#fbc02d,stroke-width:2px;
+    classDef native fill:#e8f5e9,stroke:#1b5e20,stroke-width:2px,stroke-dasharray: 5 5;
+    classDef storage fill:#eeeeee,stroke:#616161,stroke-width:2px;
+
+    %% UI Layer
+    subgraph UI ["Camada de Interface (Kotlin/Compose)"]
+        A[Tela Principal] -->|Click 'Adicionar'| B(BottomSheet Opções);
+        B -->|Opção 'Via Imagem'| C(Câmera/Galeria Contrato);
+        C -->|Uri da Imagem| D[Tela de Preview/Confirmação];
+        D -->|Confirmar| E[ViewModel];
+        E -->|Observa Estado| D;
+    end
+
+    %% Domain/Business Layer
+    subgraph Domain ["Camada de Negócio (Kotlin Coroutines)"]
+        E -->|Dispara Extração (IO Dispatcher)| F(FormExtractionUseCase);
+        F -->|Processar Uri| G[FormExtractionRepository];
+        
+        subgraph Native_Bridge ["Ponte JNI / Wrapper Kotlin"]
+            G -->|ImageData + Prompt| H{LlamaAndroid Wrapper};
+        end
+        
+        H -->|JSON Result| G;
+        G -->|Domain Object| F;
+        F -->|UI State (Success/Error)| E;
+    end
+
+    %% Native/AI Layer
+    subgraph Native ["Motor Nativo (C++ - llama.cpp)"]
+        H <-->|Chamadas JNI| I[llama.cpp Core];
+        I -->|Incerência Multimodal| J[Backend: Vulkan/OpenCL/CPU];
+    end
+
+    %% Storage Layer
+    subgraph Storage ["Armazenamento Interno"]
+        K[(Arquivos de Modelo .gguf\nLlava + MMPROJ)] <-->|Carregar em Memória| I;
+        L[(Cache de Imagens Temporárias)] <-->|Ler Imagem| G;
+    end
+
+    %% Apply Classes
+    class A,B,C,D,E ui;
+    class F,G domain;
+    class H native;
+    class I,J native;
+    class K,L storage;
+```
